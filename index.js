@@ -9,8 +9,8 @@ const app = express()
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json())
 
-const {URL, PORT} = env
-
+const {URL} = env
+const PORT = process.env.PORT || 3000
 app.get('/',(req, res)=>{
   res.status(200).json("online")
 })
