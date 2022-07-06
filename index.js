@@ -9,9 +9,9 @@ const app = express()
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json())
 
-const {URL} = env
 const PORT = process.env.PORT || 3000
-app.get('/',(req, res)=>{
+
+app.get('/test',(req, res)=>{
   res.status(200).json("online")
 })
 
@@ -93,5 +93,5 @@ app.post('/themoviedb', async(req, res) => {
 })
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${process.env.URL}:${PORT}/`)
+  console.log(`Example app listening on port ${process.env.URL}:${process.env.PORT}/`)
 })
