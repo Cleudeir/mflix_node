@@ -1,13 +1,19 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const RequestInfo = require('./RequestInfo.js');
-const app = express()
-const port = 3333
+const env = require('dotenv').config().parsed
 const Crawler = require('crawler');
 const HtmlTableToJson = require('html-table-to-json');
 
+const app = express()
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json())
+
+const {URL, PORT} = env
+
+app.get('/',(req, res)=>{
+  res.status(200).json("online")
+})
 
 app.post('/crawling', (req, res) => {
   const {type} = req.body;
@@ -86,6 +92,6 @@ app.post('/themoviedb', async(req, res) => {
   res.status(200).json(result);
 })
 
-app.listen(port, () => {
-  console.log(`Example app listening on port http://127.0.0.1:${port}/`)
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${process.env.URL}:${PORT}/`)
 })
