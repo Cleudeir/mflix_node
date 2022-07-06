@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const env = require('dotenv').config().parsed
 const Crawler = require('crawler');
 const HtmlTableToJson = require('html-table-to-json');
+const fetch = (...args) => import('node-fetch')
+	.then(({default: fetch}) => fetch(...args));
 
 const app = express()
 app.use(bodyParser.urlencoded({ extended: true }));
