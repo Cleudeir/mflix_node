@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    image: node:modify
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/home
+    container_name: node
