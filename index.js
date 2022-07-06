@@ -44,7 +44,7 @@ app.post('/crawling', (req, res) => {
             });
           });
           resultFilter = arrayIdSort
-            .filter((x) => x.date >= 2021)
+            .filter((x) => x.date >= 2020)
             .filter((x) => x !== false);
           resultFilter.map((x) => resultIds.push(x.id));
         }
@@ -57,7 +57,7 @@ app.post('/crawling', (req, res) => {
             });
           });
           resultFilter = arrayIdSort
-            .filter((x) => x.date >= 2021)
+            .filter((x) => x.date >= 2020)
             .filter((x) => x !== false);
           resultFilter.map((x) => resultIds.push(x.id));
         }
