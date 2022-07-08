@@ -10,7 +10,7 @@ const app = express()
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json())
 
-const PORT = process.env.PORT || 3000
+const port = process.env.PORT || 3333
 
 app.get('/',(req, res)=>{
   res.status(200).json("online")
@@ -71,8 +71,6 @@ app.post('/crawling', (req, res) => {
   if (type === 'tv') {
     c.queue('https://embed.uauflix.online/admin/todas-series');
   }
-
-
 })
 app.post('/themoviedb', async(req, res) => {
   console.log('themoviedb ',req.body)
@@ -81,46 +79,43 @@ app.post('/themoviedb', async(req, res) => {
   const get = async () => {
     const arrayInfos = [];
     for (let i = 0; i < library.length; i += 1) {
-      const getFetch = RequestInfo({ id: library[i], type }).then(
-        (data) => data,
-      );
+      const getFetch = await RequestInfo({ id: library[i], type })
       arrayInfos.push(getFetch);
     }
-    return Promise.all(arrayInfos).then((x) => x);
+    const result = await Promise.all(arrayInfos)
+    return result
   };
   const pull = await get();
   const result = pull.filter((x) => x !== false);
   res.status(200).json(result);
 })
 
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${process.env.URL}:${process.env.PORT}/`)
+app.listen(port, () => {
+  console.log(`Example app listening on port: ${port}`)
 })
 
 async function RequestInfo({ id, type }) {
   const API_KEY = '5417af578f487448df0d4932bc0cc1a5';
   const API_BASE = 'https://api.themoviedb.org/3';
-  const search = await fetch(`${API_BASE}/${type}/${id}?api_key=${API_KEY}`)
-    .then((response) => response.json())
-    .then((data) => data)
-    .catch(() => null);
-  if (search && search.genres && search.poster_path) {
-    if (search.backdrop_path) {
-      search.backdrop_path = `https://image.tmdb.org/t/p/original${search.backdrop_path}`;
+  const pullSearch = await fetch(`${API_BASE}/${type}/${id}?api_key=${API_KEY}`)
+  const jsonSearch = await pullSearch.json()
+  if (jsonSearch && jsonSearch.genres && jsonSearch.poster_path) {
+    if (jsonSearch.backdrop_path) {
+      jsonSearch.backdrop_path = `https://image.tmdb.org/t/p/original${jsonSearch.backdrop_path}`;
     } else {
-      search.backdrop_path = `https://image.tmdb.org/t/p/original${search.poster_path}`;
+      jsonSearch.backdrop_path = `https://image.tmdb.org/t/p/original${jsonSearch.poster_path}`;
     }
 
-    search.poster_path = `https://image.tmdb.org/t/p/w342${search.poster_path}`;
+    jsonSearch.poster_path = `https://image.tmdb.org/t/p/w342${jsonSearch.poster_path}`;
 
-    if (search.genres[0]) {
-      search.genres = await search.genres[0].name;
-    } else if (search.genres[1]) {
-      search.genres = await search.genres[1].name;
-    } else if (search.genres[2]) {
-      search.genres = await search.genres[2].name;
+    if (jsonSearch.genres[0]) {
+      jsonSearch.genres = await jsonSearch.genres[0].name;
+    } else if (jsonSearch.genres[1]) {
+      jsonSearch.genres = await jsonSearch.genres[1].name;
+    } else if (jsonSearch.genres[2]) {
+      jsonSearch.genres = await jsonSearch.genres[2].name;
     } else {
-      search.genres = 'Others';
+      jsonSearch.genres = 'Others';
     }
     if (type === 'movie') {
       const {
@@ -132,7 +127,7 @@ async function RequestInfo({ id, type }) {
         runtime,
         title,
         vote_average,
-      } = search;
+      } = jsonSearch;
 
       return {
         backdrop_path,
@@ -157,24 +152,34 @@ async function RequestInfo({ id, type }) {
         original_name,
         vote_average,
         number_of_seasons,
-      } = search;
+      } = jsonSearch;
       // buscar informação detalhada das temporadas
-      const promisse_seasons_details = [];
-      for (let i = 1; i <= number_of_seasons; i += 1) {
-        const search_details = await fetch(
-          `${API_BASE}/tv/${id}/season/${i}?api_key=${API_KEY}`,
-        )
-          .then((response) => response.json())
-          .then((data) => data)
-          .catch(() => null);
-        if (search_details) {
-          promisse_seasons_details.push(search_details);
+      async function SeasonsDetails() {
+        const promisse_seasons_details = [];
+        for (let i = 1; i <= number_of_seasons; i += 1) {
+          try {
+            const search_details = await fetch(
+              `${API_BASE}/tv/${id}/season/${i}?api_key=${API_KEY}`,
+            )
+            const json = await search_details.json()
+            promisse_seasons_details.push(json);  
+          } catch (error) {
+            console.log(error)
+          }        
         }
+        const result = await Promise.all(promisse_seasons_details)
+        return result
       }
-      const info_seasons = promisse_seasons_details;
+      const seasons_details = await SeasonsDetails(); 
       const seasons = [];
-      for (let j = 0; j < info_seasons.length; j += 1) {
-        seasons.push(info_seasons[j].episodes.length);
+      for (let j = 0; j < seasons_details.length; j += 1) {
+        if(
+          seasons_details[j].episodes && 
+          seasons_details[j].episodes.length
+          )
+          {
+          seasons.push(seasons_details[j].episodes.length)
+          }
       }
       return {
         seasons,

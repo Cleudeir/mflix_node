@@ -1,4 +1,7 @@
-POST https://mflixbackend.herokuapp.com/themoviedb
+
+
+//POST https://mflixbackend.herokuapp.com/themoviedb
+POST http://localhost:3333/themoviedb
 content-type: application/json
 
 {"library": 
