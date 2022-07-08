@@ -74,8 +74,11 @@ app.post('/crawling', (req, res) => {
 })
 app.post('/themoviedb', async(req, res) => {
   console.log('themoviedb ',req.body)
- 
   const { library, type } = req.body;
+  if(!library || !type){
+    res.status(200).json("Falta parameros")
+    return null
+  }
   const get = async () => {
     const arrayInfos = [];
     for (let i = 0; i < library.length; i += 1) {
