@@ -18,6 +18,10 @@ app.get('/',(req, res)=>{
 
 app.post('/crawling', (req, res) => {
   const {type} = req.body;
+  if(!type){
+    res.status(200).json("Falta parameros")
+    return null
+  }
   console.log(type)
   const arrayIdSort = [];
   const resultIds = [];
