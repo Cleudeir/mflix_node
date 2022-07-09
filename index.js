@@ -65,7 +65,11 @@ app.post('/crawling', (req, res) => {
             .filter((x) => x !== false);
           resultFilter.map((x) => resultIds.push(x.id));
         }
-        res.status(200).json(resultIds.slice(0, 500));
+        if(port === 3333){
+          res.status(200).json(resultIds.slice(0, 5));
+        }else{
+          res.status(200).json(resultIds.slice(0, 500));
+        }
       }
     },
   });
