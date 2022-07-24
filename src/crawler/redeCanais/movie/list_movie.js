@@ -7,7 +7,7 @@ const redeCanais = function ({baseUrl,_result}){
             if(error){
               return null
             } 
-            const { $ } = resp;           
+            const $ = resp.$;
             const response = $('a:contains("Assistir")');
             const result = []
               for (let i = 0; i < response.length; i++) {

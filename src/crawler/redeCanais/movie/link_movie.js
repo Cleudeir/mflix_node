@@ -7,7 +7,7 @@ const link_movie = async function ({baseUrl, url,_push}){
             if(error){
                 return null
             }         
-            const { $ } = resp;
+            const $ = resp.$;
             const response = $('iframe')
             if(response && response[0] && response[0].attribs && response[0].attribs.src){                      
                 const [one,two] = response[0].attribs.src.split(".php")                 
