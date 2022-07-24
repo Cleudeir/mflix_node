@@ -1,10 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const uauFlix = require('./src/crawler/uauFlix.js');
-const imdbId = require('./src/tmdb/imdbId.js');
-const list_movie = require('./src/crawler/redeCanais/movie/list_movie.js');
-const link_movie = require('./src/crawler/redeCanais/movie/link_movie.js');
+const uauFlix = require('./crawler/uauFlix.js');
+const imdbId = require('./tmdb/imdbId.js');
+const list_movie = require('./crawler/redeCanais/movie/list_movie.js');
+const link_movie = require('./crawler/redeCanais/movie/link_movie.js');
 
 const app = express()
 app.use(bodyParser.urlencoded({ extended: true }));
