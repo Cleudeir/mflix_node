@@ -7,7 +7,7 @@ const link_movie = async function ({baseUrl, url,_push}){
             if(error){
                 return null
             }         
-            var $ = res['$']
+            const $ = res['$']
             const response = $('iframe')
             console.log(response)
             if(response && response[0] && response[0].attribs && response[0].attribs.src){                      
