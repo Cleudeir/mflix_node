@@ -18,6 +18,7 @@ app.get('/',(req, res)=>{
 
 app.post('/list',  (req, res) => {
   const {baseUrl,type,range} = req.body;
+  console.log(baseUrl,type,range)
   if(!type || !range){
     res.status(200).json("Falta parameros")
     return null

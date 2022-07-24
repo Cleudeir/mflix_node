@@ -9,6 +9,7 @@ const link_movie = async function ({baseUrl, url,_push}){
             }         
             var $ = res['$']
             const response = $('iframe')
+            console.log(response)
             if(response && response[0] && response[0].attribs && response[0].attribs.src){                      
                 const [one,two] = response[0].attribs.src.split(".php")                 
                 const url = one+"hlb"+".php"+two
