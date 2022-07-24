@@ -8,7 +8,7 @@ const redeCanais = function ({baseUrl,_result}){
               return null
             } 
             const $ = res['$']
-            const response = $('a:contains("Assistir")');            
+            const response = $('a');            
             const result = []
               for (let i = 0; i < response.length; i++) {
                 const url = response[i].attribs.href;          
