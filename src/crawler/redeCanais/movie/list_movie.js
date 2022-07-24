@@ -7,8 +7,8 @@ const redeCanais = function ({baseUrl,_result}){
             if(error){
               return null
             } 
-            const $ = res['$']
-            const response = JSON.parse($('a:contains("Assistir")'))          
+            const resp = res.$
+            const response = resp('a:contains("Assistir")');            
             console.log(response)
             const result = []
               for (let i = 0; i < response.length; i++) {
