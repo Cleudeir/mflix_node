@@ -1,10 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const uauFlix = require('./crawler/uauFlix.js');
-const imdbId = require('./tmdb/imdbId.js');
-const list_movie = require('./crawler/redeCanais/movie/list_movie.js');
-const link_movie = require('./crawler/redeCanais/movie/link_movie.js');
+const uauFlix = require('./src/crawler/uauFlix.js');
+const imdbId = require('./src/tmdb/imdbId.js');
+const list_movie = require('./src/crawler/redeCanais/movie/list_movie.js');
+const link_movie = require('./src/crawler/redeCanais/movie/link_movie.js');
 
 const app = express()
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -74,7 +74,7 @@ app.post('/list',  (req, res) => {
           data.push({...x, url: null})
           if(data_uauFlix.length-1 === f){
             console.log(f,data_uauFlix.length)
-            fs.writeFileSync(`data_${type}.json`, JSON.stringify(data))
+            // fs.writeFileSync(`data_${type}.json`, JSON.stringify(data))
             res.status(200).json(data);
           }
         }
@@ -84,7 +84,7 @@ app.post('/list',  (req, res) => {
           data.push({...x, url})
           if(data_uauFlix.length-1 === f){
             console.log(f,data_uauFlix.length)
-            fs.writeFileSync(`data_${type}.json`, JSON.stringify(data))
+            // fs.writeFileSync(`data_${type}.json`, JSON.stringify(data))
             res.status(200).json(data);
           }
         }        
@@ -94,24 +94,6 @@ app.post('/list',  (req, res) => {
 })
 
 
-app.post('/redecanais',  (req, res) => {
-  const {baseUrl, url, type} = req.body;
-  if(!baseUrl || !url || !type){
-    res.status(200).json("Falta parameros")
-    return null
-  }
-  if(type==="movie"){
-  link_movie({baseUrl, url,_result})
-  }
-  function _result(data){
-    res.status(200).json(data);
-  }
-})
-
 app.listen(port, () => {
   console.log(`Example app listening on port: ${port}`)
 })
-
-async function RequestInfo({ id, type }) {
-  
-}

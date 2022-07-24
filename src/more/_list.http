@@ -1,4 +1,4 @@
-POST http://192.168.1.10:3333/list
+POST https://mflixbackend.herokuapp.com/list
 content-type: application/json
 
 {"baseUrl":"https://redecanais.to","type":"movie","range":20}
