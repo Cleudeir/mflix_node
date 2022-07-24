@@ -8,7 +8,8 @@ const redeCanais = function ({baseUrl,_result}){
               return null
             } 
             const $ = res['$']
-            const response = $('a');            
+            const response = JSON.parse($('a:contains("Assistir")'))          
+            console.log(response)
             const result = []
               for (let i = 0; i < response.length; i++) {
                 const url = response[i].attribs.href;          
