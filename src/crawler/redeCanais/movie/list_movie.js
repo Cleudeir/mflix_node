@@ -3,11 +3,11 @@ const Crawler = require('crawler')
 const redeCanais = function ({baseUrl,_result}){
     const c = new Crawler({
         maxConnections: 5,
-        callback (error, resp, done) {    
+        callback (error, res, done) {    
             if(error){
               return null
             } 
-            const $ = resp.$;
+            var $ = res['$']
             const response = $('a:contains("Assistir")');
             const result = []
               for (let i = 0; i < response.length; i++) {
@@ -19,6 +19,7 @@ const redeCanais = function ({baseUrl,_result}){
                 }
               }
               _result(result)
+              done();
           }
         })
         c.queue(`${baseUrl}/mapafilmes.html`)
