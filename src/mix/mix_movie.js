@@ -7,6 +7,7 @@ const mix_movie = function ({ baseUrl, data_uauFlix, saveSend }) {
 	function _result(data) {
 		const result = [];
 		let count = 0;
+		console.log(data_uauFlix.length)
 		for (let f = 0; f < data_uauFlix.length; f++) {
 			const x = data_uauFlix[f];
 			const text1 = normalizeText(x.title);
@@ -19,14 +20,17 @@ const mix_movie = function ({ baseUrl, data_uauFlix, saveSend }) {
 				link_movie({ baseUrl, url: filterData[0].url, _push });
 				function _push(url) {
 					count++;
-					console.log(count, url);
-					result.push({ ...x, url });
-					if (data_uauFlix.length === count) {
-						saveSend(result);
+					if (url !== null) {
+						console.log(count, url);
+						result.push({ ...x, url });
+						if (data_uauFlix.length === count) {
+							saveSend(result);
+						}
 					}
 				}
 			} else {
 				count++;
+				console.log(count, "");
 				result.push(x);
 				if (data_uauFlix.length === count) {
 					saveSend(result);

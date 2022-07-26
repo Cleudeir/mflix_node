@@ -9,7 +9,7 @@ app.use(express.json());
 
 const port = process.env.PORT || 3333;
 const baseUrl = "https://redecanais.to";
-const range = 500;
+const range = 600;
 
 app.get("/", (req, res) => {
 	res.status(200).json("online");
