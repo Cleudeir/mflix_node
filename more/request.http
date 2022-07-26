@@ -1,0 +1,23 @@
+#### Movie
+get http://192.168.1.10:3333/movie
+
+#### TV
+GET http://192.168.1.10:3333/tv
+
+### list movie
+POST http://192.168.1.10:3333/list
+content-type: application/json
+
+{"baseUrl":"https://redecanais.to","type":"movie","range":50}
+
+### list tv
+POST http://192.168.1.10:3333/list
+content-type: application/json
+
+{"baseUrl":"https://redecanais.to","type":"tv","range":50}
+
+#### get https://api.themoviedb.org/3/movie
+get https://api.themoviedb.org/3/movie/58841?api_key=5417af578f487448df0d4932bc0cc1a5
+
+#### get https://api.themoviedb.org/3/tv
+get https://api.themoviedb.org/3/tv/58841?api_key=5417af578f487448df0d4932bc0cc1a5;

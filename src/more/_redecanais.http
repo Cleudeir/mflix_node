@@ -1,5 +1,0 @@
-POST http://192.168.1.10:3333/redecanais
-content-type: application/json
-
-{"baseUrl":"https://redecanais.to","type":"movie","url":"/ma-dublado-2019-1080p_63ea43fd0.html"}
-
