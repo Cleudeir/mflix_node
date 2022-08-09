@@ -1,8 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const data_movie = require("./main/data_movie");
-const data_tv = require("./main/data_tv");
-const Revalidate  = require("./Revalidate");
+const data_movie = require("./main/movie/data_movie");
+const data_tv = require("./main/tv/data_tv");
+const Revalidate  = require("./components/Revalidate");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -14,19 +14,18 @@ app.get("/", (req, res) => {
 	res.status(200).json("online");
 });
 
-const movieValidate = new Revalidate(24*60)
+const movieValidate = new Revalidate("movie",24*60)
 app.get("/movie", (req, res) => {
 	const { range, baseUrl } = req.query;
 	console.log(range, baseUrl);
 	// list movie
 	const params = { range, baseUrl }
 	movieValidate.check(data_movie,params)
-	// data_movie({ baseUrl, range });
 	const movie = require("../data_movie.json");
 	res.status(200).json(movie);
 });
 
-const tvValidate = new Revalidate(24*60)
+const tvValidate = new Revalidate("tv",24*60)
 app.get("/tv", (req, res) => {
 	const { range, baseUrl } = req.query;
 	// list tv

@@ -1,8 +1,11 @@
-const api = require("../api");
 const fetch = (...args) =>
 	import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
 const imdb_tv = async function ({ imdb_id }) {
+	const api = {
+		url: "https://api.themoviedb.org/3",
+		key: "5417af578f487448df0d4932bc0cc1a5",
+	};
 	try {
 		const pullInfo = await fetch(
 			`${api.url}/tv/${imdb_id}?api_key=${api.key}&language=pt-BR`

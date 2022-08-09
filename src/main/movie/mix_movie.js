@@ -1,6 +1,6 @@
-const list_movie = require("../crawler/redeCanais/movie/list_movie.js");
-const link_movie = require("../crawler/redeCanais/movie/link_movie.js");
-const normalizeText = require("../components/normalizeText.js");
+const list_movie = require("./redeCanais_list_movie.js");
+const link_movie = require("./redeCanais_link_movie.js");
+const normalizeText = require("../../components/normalizeText.js");
 
 const mix_movie = function ({ baseUrl, data_uauFlix, saveSend }) {
 	list_movie({ baseUrl, _result });
@@ -21,7 +21,6 @@ const mix_movie = function ({ baseUrl, data_uauFlix, saveSend }) {
 				function _push(url) {
 					count++;
 					if (url !== null) {
-						console.log(count, url);
 						result.push({ ...x, url });
 						if (data_uauFlix.length === count) {
 							saveSend(result);
@@ -30,7 +29,6 @@ const mix_movie = function ({ baseUrl, data_uauFlix, saveSend }) {
 				}
 			} else {
 				count++;
-				console.log(count, "");
 				result.push(x);
 				if (data_uauFlix.length === count) {
 					saveSend(result);

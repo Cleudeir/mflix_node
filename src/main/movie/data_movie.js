@@ -1,24 +1,25 @@
-const imdb_tv = require("../tmdb/tv/imdb_tv.js");
-const list_tv = require("../crawler/uauFLix/tv/list_tv.js");
+
+const list_movie = require("./uauFlix_list_movie.js");
+const mix_movie = require("./mix_movie.js");
+const imdb_movie = require("./imdb_movie.js");
 const fs = require("fs");
 
-const data_tv = function ({ baseUrl, range }) {
-	const type = "tv";
+const data_movie = function ({ baseUrl, range }) {
+	const type = "movie";
 	console.log({ baseUrl, type, range });
 
 	if (!type || !range) {
 		res.status(200).json("Falta parameros");
 		return null;
 	}
-
-	list_tv({ range, send });
+	list_movie({ range, send });
 
 	async function send(list) {
 		const getImdbInfo = async () => {
 			const arrayInfos = [];
 			for (let i = 0; i < list.length; i += 1) {
 				const imdb_id = list[i];
-				const getFetch = imdb_tv({ imdb_id });
+				const getFetch = imdb_movie({ imdb_id });
 				arrayInfos.push(getFetch);
 			}
 			const result = await Promise.all(arrayInfos);
@@ -28,12 +29,12 @@ const data_tv = function ({ baseUrl, range }) {
 		const pull = await getImdbInfo();
 		const data_uauFlix = pull.filter((x) => x !== null);
 
-		saveSend(data_uauFlix);
+		mix_movie({ baseUrl, data_uauFlix, saveSend });
 	}
 
 	function saveSend(data) {
 		fs.writeFileSync(`data_${type}.json`, JSON.stringify(data));
-		console.log(`done ${data.length} ${type}`);
+		console.log(`Atualizada lista ${data.length} ${type}`);
 	}
 };
-module.exports = data_tv;
+module.exports = data_movie;
