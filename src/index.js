@@ -21,7 +21,6 @@ app.get("/movie",async (req, res) => {
 	// list movie
 	const params = { range, baseUrl }
 	await movieValidate.check(data_movie,params);
-	console.log ('movie',movieValidate.data.length)
 	res.status(200).json(movieValidate.data);
 });
 
@@ -31,7 +30,6 @@ app.get("/tv", async (req, res) => {
 	// list tv
 	const params = { range, baseUrl }
 	await tvValidate.check(data_tv,params)
-	console.log ('tv',tvValidate.data.length)
 	res.status(200).json(tvValidate.data);
 });
 app.listen(port, () => {

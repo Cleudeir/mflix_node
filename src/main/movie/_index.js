@@ -26,8 +26,6 @@ const data_movie = async function ({ baseUrl, range }) {
 	const data_redeCanais_ids = await imdb_title_movie(redeCanais_list.data)
 	const data_redeCanais = await imdb_id_movie(data_redeCanais_ids)
 
-	console.log(data_redeCanais.length);
-
 	const mix =  mix_movie(data_uauFlix, data_redeCanais);
 
 	const dataCategory = category(mix)

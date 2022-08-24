@@ -41,7 +41,6 @@ const redeCanais = async function ({baseUrl,range}) {
     
     } else {url =  null};    
     if(url){
-      console.log(url);
       result.push({ title, url });
     }
   } 
