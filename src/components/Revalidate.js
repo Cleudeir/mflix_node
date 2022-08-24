@@ -1,20 +1,21 @@
 class Revalidate {
-	constructor(name,revalidateTime) {
+	constructor(name,revalidateTimeHours) {
 		this.name = name
 		this.timeStart = Date.now();
-		this.revalidateTime = revalidateTime * 60 * 1000;
+		this.revalidateTime = revalidateTimeHours * 60 * 60 * 1000;
 		this.count = 0;
+		this.data = [];
 	}
-	check(_function, params) {
-		console.log(this.name,'count: ', this.count)
+	async check(_function, params) {
 		if(this.count===0){
-			_function(params);
+			this.data = await _function(params);
 		}
-		this.count += 1 
+
+		this.count += 1
 		const timeNow = Date.now();
-		console.log(timeNow - this.timeStart, this.revalidateTime)
+		console.log("Revalidate ",this.name, ((timeNow - this.timeStart)/1000/60).toFixed(2),'/', this.revalidateTime/1000/60,'min')
 		if (timeNow - this.timeStart > this.revalidateTime) {
-			_function(params);
+			this.data = await _function(params);
 			this.timeStart = Date.now();
 		}
 	}

@@ -1,14 +1,14 @@
 const fetch = (...args) =>
 	import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
-const imdb_movie = async function ({ imdb_id }) {
+const get = async function ( item ) {
 	const api = {
 		url: "https://api.themoviedb.org/3",
 		key: "5417af578f487448df0d4932bc0cc1a5",
 	};
 	try {
 		const pullInfo = await fetch(
-			`${api.url}/movie/${imdb_id}?api_key=${api.key}&language=pt-BR`
+			`${api.url}/movie/${item.imdb_id}?api_key=${api.key}&language=pt-BR`
 		);
 		const jsonInfo = await pullInfo.json();
 
@@ -37,6 +37,7 @@ const imdb_movie = async function ({ imdb_id }) {
 					overview,
 					poster_path,
 					title,
+					imdb_id,
 					vote_average,
 				} = jsonInfo;
 
@@ -49,6 +50,7 @@ const imdb_movie = async function ({ imdb_id }) {
 					poster_path,
 					title,
 					vote_average,
+					url: item.url
 				};			
 		} else {
 			return null;
@@ -56,6 +58,18 @@ const imdb_movie = async function ({ imdb_id }) {
 	} catch (error) {
 		return null;
 	}
+};
+
+const imdb_movie = async (list) => {
+	const arrayInfos = [];
+	for (let i = 0; i < list.length; i += 1) {
+		const item = list[i];
+		const getFetch = get( item );
+		arrayInfos.push(getFetch);
+	}
+	const result = await Promise.all(arrayInfos);
+	const filter = result.filter((x) => x !== null);
+	return filter;
 };
 
 module.exports = imdb_movie;

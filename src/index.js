@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const data_movie = require("./main/movie/data_movie");
-const data_tv = require("./main/tv/data_tv");
+const data_movie = require("./main/movie/_index");
+const data_tv = require("./main/tv");
 const Revalidate  = require("./components/Revalidate");
 
 const app = express();
@@ -14,26 +14,29 @@ app.get("/", (req, res) => {
 	res.status(200).json("online");
 });
 
-const movieValidate = new Revalidate("movie",24*60)
-app.get("/movie", (req, res) => {
+const movieValidate = new Revalidate("movie",24)
+app.get("/movie",async (req, res) => {
 	const { range, baseUrl } = req.query;
 	console.log(range, baseUrl);
 	// list movie
 	const params = { range, baseUrl }
-	movieValidate.check(data_movie,params)
-	const movie = require("../data_movie.json");
-	res.status(200).json(movie);
+	await movieValidate.check(data_movie,params);
+	console.log ('movie',movieValidate.data.length)
+	res.status(200).json(movieValidate.data);
 });
 
-const tvValidate = new Revalidate("tv",24*60)
-app.get("/tv", (req, res) => {
+const tvValidate = new Revalidate("tv",24)
+app.get("/tv", async (req, res) => {
 	const { range, baseUrl } = req.query;
 	// list tv
 	const params = { range, baseUrl }
-	tvValidate.check(data_tv,params)
-	const tv = require("../data_tv.json");
-	res.status(200).json(tv);
+	await tvValidate.check(data_tv,params)
+	console.log ('tv',tvValidate.data.length)
+	res.status(200).json(tvValidate.data);
 });
 app.listen(port, () => {
 	console.log(`Example app listening on port: ${port}`);
 }); // list movie
+
+
+
