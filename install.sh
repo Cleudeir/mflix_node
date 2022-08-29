@@ -14,7 +14,9 @@ apt-get update && apt-get install -y --fix-missing libatomic1
 nvm install 16
 nvm use 16
 #--
-
+# Git 
+sudo apt install git-all -y
+git --version
 # pm2
-npm install pm2@latest -g
+npm install pm2@latest -g -y
 #--
