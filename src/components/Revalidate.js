@@ -15,7 +15,7 @@ class Revalidate {
 		const timeNow = Date.now();
 		console.log("Revalidate ",this.name, ((timeNow - this.timeStart)/1000/60).toFixed(2),'/', this.revalidateTime/1000/60,'min')
 		if (timeNow - this.timeStart > this.revalidateTime) {
-			this.data = await _function(params);
+			this.data = _function(params);
 			this.timeStart = Date.now();
 		}
 	}
