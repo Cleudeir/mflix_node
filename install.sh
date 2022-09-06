@@ -20,3 +20,8 @@ git --version
 # pm2
 npm install pm2@latest -g -y
 #--
+
+#pi hole
+
+curl -sSL https://install.pi-hole.net | bash
+

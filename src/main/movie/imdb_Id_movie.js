@@ -63,6 +63,7 @@ const get = async function ( item ) {
 const imdb_movie = async (list) => {
 	const arrayInfos = [];
 	for (let i = 0; i < list.length; i += 1) {
+		console.log('id_imdb_movie',i,'/',list.length)
 		const item = list[i];
 		const getFetch = get( item );
 		arrayInfos.push(getFetch);
