@@ -1,4 +1,4 @@
-async function category(data) {
+async function Category(data) {
   //--
   // Criar Array com gêneros
   const genresSingle = new Set();
@@ -7,14 +7,13 @@ async function category(data) {
   //--
   // Criar Array categorizado por gênero
   const result = [];
-
   const vote = data.filter((x) => +x.vote_average > 7);
   for (let i = 0; i < genres.length; i += 1) {
     const genre = vote.filter((x) => x.genres === genres[i]);
     if(genre.length > 0){
-      result.push(genre.slice(0,100));
+      result.push(genre.slice(0,200));
     }
   }
   return result;
 }
-module.exports = category;
+module.exports = Category;
