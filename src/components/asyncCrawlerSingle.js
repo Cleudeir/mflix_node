@@ -19,7 +19,7 @@ const asyncCrawlerSingle = async function (url) {
     });
     return promise
   } catch (error) {
-    console.log(error)
+    console.log('asyncCrawlerSingle ', error)
   }
 }
 module.exports = asyncCrawlerSingle;

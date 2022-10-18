@@ -1,14 +1,16 @@
+const Save = require("../../components/Save");
+
 const fetch = (...args) =>
 	import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
-const get = async function (imdb_id ) {
+const get = async function (item) {
 	const api = {
 		url: "https://api.themoviedb.org/3",
 		key: "5417af578f487448df0d4932bc0cc1a5",
 	};
 	try {
 		const pullInfo = await fetch(
-			`${api.url}/tv/${imdb_id}?api_key=${api.key}&language=pt-BR`
+			`${api.url}/tv/${item.imdb_id}?api_key=${api.key}&language=pt-BR`
 		);
 		const jsonInfo = await pullInfo.json();
 
@@ -47,35 +49,38 @@ const get = async function (imdb_id ) {
 				seasonsEpisodes.push(episode_count);
 			}
 			return {
+				uuid: item.uuid,
 				seasons: seasonsEpisodes,
 				backdrop_path,
 				genres,
-				imdb_id,
+				imdb_id: item.imdb_id,
 				original_title: original_name,
 				title: name,
 				overview,
 				poster_path,
 				vote_average,
+				error: false
 			};
 		} else {
-			return null;
+			return { ...item, error: true };
 		}
 	} catch (error) {
-		return null;
+		return { ...item, error: true };
 	}
 };
 
 
 const imdb_tv = async (list) => {
-	const arrayInfos = [];
-	for (let i = 0; i < list.length; i += 1) {
-		const imdb_id = list[i];
-		const getFetch = get( imdb_id );
-		arrayInfos.push(getFetch);
+	const save = new Save("imdb_tv")
+	const remenber = await save.verify(list)
+	for (let i = 0; i < remenber.length; i += 1) {
+		console.log('imdb_tv', i, '/', remenber.length)
+		const item = remenber[i];
+		const getFetch = await get(item);
+		await save.insert(getFetch)
 	}
-	const result = await Promise.all(arrayInfos);
-	const filter = result.filter((x) => x !== null);
-	return filter;
+	const result = await save.read()
+	return result;
 };
 
 module.exports = imdb_tv;

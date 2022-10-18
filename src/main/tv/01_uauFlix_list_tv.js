@@ -1,8 +1,10 @@
 const Crawler = require("crawler");
 const HtmlTableToJson = require("html-table-to-json");
 const asyncCrawlerSingle = require("../../components/asyncCrawlerSingle");
+var hash = require('object-hash');
 
-const list_tv = async function (range) {
+const list_tv = async function () {
+
 	const arrayIdSort = [];
 	const resultIds = [];
 	let resultFilter = [];
@@ -24,9 +26,13 @@ const list_tv = async function (range) {
 	resultFilter = arrayIdSort
 		.filter((x) => x.date >= 1900)
 		.filter((x) => x !== false);
-	resultFilter.map((x) => resultIds.push(x.id));
-	const filter = resultIds.slice(0, range)
-	return  filter
+	resultFilter.map((x) => resultIds.push(
+		{
+			imdb_id: x.id,
+			uuid: hash({ imdb_id: x.id }, { algorithm: 'sha1' })
+		}
+	));
+	return resultIds
 };
 
 module.exports = list_tv;

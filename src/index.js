@@ -48,37 +48,34 @@ app.get("/movie", async (req, res) => {
 	} catch (error) {
 		res.status(200).json([]);
 	}
-
-	start()
-	const interval = setInterval(start, 5 * 60 * 1000)
-
-	const result = []
-
-	async function start() {
-		const time = Date.now()
-		const add = 200
-		console.log(count, count + add)
-		const movieListTitle = await redeCanais_list_movie(baseUrl, data.slice(count, count + add));
-		count += add
-		const movieListImdbId = await imdb_title_movie(movieListTitle);
-		const movieListInfoComplete = await imdb_id_movie(movieListImdbId)
-		result.push(...movieListInfoComplete)
-		console.log('>>>>>', (Date.now() - time) / 1000, 's <<<<<')
-		if (count > data.length) {
-			clearInterval(interval)
-			console.log(`Atualizada lista ${result.length} ${type}`);
+	if (port === 3333) {
+		start()
+		const interval = setInterval(start, 5 * 60 * 1000)
+		const result = []
+		async function start() {
+			const time = Date.now()
+			const add = 200
+			console.log(count, count + add)
+			const movieListTitle = await redeCanais_list_movie(baseUrl, data.slice(count, count + add));
+			count += add
+			const movieListImdbId = await imdb_title_movie(movieListTitle);
+			const movieListInfoComplete = await imdb_id_movie(movieListImdbId)
+			result.push(...movieListInfoComplete)
+			console.log('>>>>>', (Date.now() - time) / 1000, 's <<<<<')
+			if (count > data.length) {
+				clearInterval(interval)
+				console.log(`Atualizada lista ${result.length} ${type}`);
+			}
 		}
 	}
-
 });
 
-const tvValidate = new Revalidate("tv", 24)
 app.get("/tv", async (req, res) => {
 	const { range, baseUrl } = req.query;
 	// list tv
 	const params = { range, baseUrl }
-	await tvValidate.check(data_tv, params)
-	res.status(200).json(tvValidate.data);
+	const tvValidate = await data_tv(params)
+	res.status(200).json(tvValidate);
 });
 app.listen(port, () => {
 	console.log(`Example app listening on port: ${port}`);
