@@ -1,23 +1,25 @@
 const Crawler = require("crawler");
 
 const asyncCrawlerSingle = async function (url) {
-
-  const a = await new Promise(
+  try {
+  let promise = await new Promise(
     function (resolve, reject) {
-      const c = new Crawler({
-        rateLimit: 200,
-        maxConnections: 1,
-        retries: 0,
-        callback(error, res, done) {
-          if (error) {
-            reject(null)
-          }
-          resolve(res);
-        },
-      });
-
-      c.queue(url);
+      
+        const c = new Crawler({
+          retries: 0,
+          callback(error, res, done) {
+            if (error) {
+              reject()
+            }
+            resolve(res);
+            done()
+          },
+        });
+        c.queue(url);
     });
-  return a
+    return promise
+  } catch (error) {
+    console.log(error)
+  }
 }
 module.exports = asyncCrawlerSingle;

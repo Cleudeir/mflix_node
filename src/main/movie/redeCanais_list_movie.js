@@ -1,34 +1,28 @@
 const asyncCrawlerList = require("../../components/asyncCrawlerList");
-const asyncCrawlerSingle = require("../../components/asyncCrawlerSingle");
+const Save = require("../../components/Save");
 
-const redeCanais = async function (baseUrl) {
-  const res = await asyncCrawlerSingle(`${baseUrl}/mapafilmes.html`)
-  const { $ } = res;
-  const response = $('a:contains("Assistir")');
-  const data = [];
-  for (let i = 0; i < response.length; i++) {
-    const url = response[i].attribs.href;
-    if (
-      url.includes("dublado") &&
-      (url.includes("1080p") || url.includes("720p"))
-    ) {
-      const [one, two] = url.split("-dublado-");
-      const [year] = two.split("-");
-      const title = one.replace("/", "").split("-").join(" ");
-      data.push({ title, url, year });
-    }
-  }
 
-  const resList = await asyncCrawlerList(baseUrl, data)
-  const result = []
+const redeCanais = async function (baseUrl, data) {
+  const save = new Save("redeCanais_list_movie")
+  console.log('mapFilmes: ', data.length)
+  const remenber = await save.verify(data)
+  const resList = await asyncCrawlerList(baseUrl, remenber)
+
   for (let i = 0; i < resList.length; i++) {
-    console.log('redeCanais_list ', i, '/', resList.length)
+    console.log('redeCanais_list ', (i + 1), '/', resList.length)
     const res = resList[i]
+    let url = null;
+    const { title, year, uuid } = data[i]
     if (!res) {
+      await save.insert({
+        uuid,
+        title,
+        url,
+        year,
+        error: true
+      })
       continue;
     }
-    const { title, year } = data[i]
-    let url = null;
     const { $ } = res;
     if (!$) {
       url = null
@@ -41,12 +35,13 @@ const redeCanais = async function (baseUrl) {
 
     } else { url = null };
     if (url) {
-      result.push({ title, url, year });
+      await save.insert({ uuid, title, url, year, error: false })
+    } else {
+      await save.insert({ uuid, title, url, year, error: true })
     }
   }
-  console.log('redeCanais ', result.length)
+  const result = await save.read()
   return result
 };
-
 
 module.exports = redeCanais;

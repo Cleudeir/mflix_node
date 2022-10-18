@@ -26,7 +26,6 @@ const list_tv = async function (range) {
 		.filter((x) => x !== false);
 	resultFilter.map((x) => resultIds.push(x.id));
 	const filter = resultIds.slice(0, range)
-	console.log(filter)
 	return  filter
 };
 
