@@ -10,7 +10,8 @@ class Save {
 		let read;
 		try {
 			read = JSON.parse(await fsSync.readFile(`./temp/${this.name}.json`))
-			console.log(this.name, read.length)
+			const dataUnique =
+				console.log(this.name, read.length)
 		} catch (error) {
 			await fsSync.writeFile(`./temp/${this.name}.json`, JSON.stringify([]))
 			console.log(this.name)
@@ -52,10 +53,19 @@ class Save {
 	}
 	async insert(data) {
 		if (!data) return
-		const read = await fsSync.readFile(`./temp/${this.name}.json`)
-		const json = JSON.parse(read)
-		console.log('insert :', json.length)
-		fs.writeFileSync(`./temp/${this.name}.json`, JSON.stringify([...json, data]));
+		try {
+			const read = await fsSync.readFile(`./temp/${this.name}.json`)
+			const json = JSON.parse(read)
+			const filter = json.filter(item => item.uuid === data.uuid)
+			if (filter.length === 0) {
+				console.log('insert :', json.length)
+				fs.writeFileSync(`./temp/${this.name}.json`, JSON.stringify([...json, data]));
+			}else{
+				console.log('Not insert, repeated!')
+			}
+		} catch (error) {
+			fs.writeFileSync(`./temp/${this.name}.json`, JSON.stringify([data]));
+		}
 	}
 }
 module.exports = Save;

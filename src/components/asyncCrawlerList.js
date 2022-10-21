@@ -30,9 +30,10 @@ const asyncCrawlerList = async function (baseUrl, list) {
   if (!list) return;
   const result = []
   for (let i = 0; i < list.length; i++) {
-    // console.log(i, list.length)
+    
     if (Number.isInteger(i / 100)) {
       await sleep(1000)
+      console.log(i, list.length)
     }
     if (list[i].url[0] !== "/") {
       console.log(list[i].url)

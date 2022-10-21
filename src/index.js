@@ -20,7 +20,7 @@ app.get("/", (req, res) => {
 	res.status(200).json("online");
 });
 
-
+let ocupadoMovie = false
 app.get("/movie", async (req, res) => {
 	let count = 0
 	const { range, baseUrl } = req.query;
@@ -49,11 +49,13 @@ app.get("/movie", async (req, res) => {
 	} catch (error) {
 		res.status(200).json([]);
 	}
-	if (port === 3333) {
-		start()
+	if (port === 3333 && ocupadoMovie === false) {
+		console.log("Start")
 		const interval = setInterval(start, 12 * 60 * 1000)
 		const result = []
+		start()
 		async function start() {
+			ocupadoMovie = true
 			const time = Date.now()
 			const add = 500
 			console.log(count, count + add)
@@ -67,18 +69,17 @@ app.get("/movie", async (req, res) => {
 			if (count > data.length) {
 				clearInterval(interval)
 				console.log(`Atualizada lista ${result.length} ${type}`);
+				ocupadoMovie = false
 			}
 		}
 	}
 });
 
+let ocupadoTv = false
 app.get("/tv", async (req, res) => {
 	const { range, baseUrl } = req.query;
 	// list tv
 	const params = { range, baseUrl }
-	if (port === 3333) {
-		await data_tv(params)
-	}
 	try {
 		const resp = await fsSync.readFile(`./temp/imdb_tv.json`)
 		const respJson = await JSON.parse(resp)
@@ -88,6 +89,11 @@ app.get("/tv", async (req, res) => {
 		res.status(200).json([]);
 	}
 
+	if (port === 3333 && ocupadoTv === false) {
+		ocupadoTv = true
+		await data_tv(params)
+		ocupadoTv = false
+	}
 });
 app.listen(port, () => {
 	console.log(`Example app listening on port: ${port}`);
