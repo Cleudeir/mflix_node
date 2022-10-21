@@ -34,9 +34,7 @@ app.get("/movie", async (req, res) => {
 
 	// listar uauflix
 	// const uau_list = await uau_list_movie(range);
-	// const data_uauFlix = await imdb_id_movie(uau_list)
-
-	const data = await mapFilmes(baseUrl)
+	// const data_uauFlix = await imdb_id_movie(uau_list)	
 
 	try {
 		const resp = await fsSync.readFile(`./temp/imdb_movie.json`)
@@ -56,6 +54,7 @@ app.get("/movie", async (req, res) => {
 		start()
 		async function start() {
 			ocupadoMovie = true
+			const data = await mapFilmes(baseUrl)
 			const time = Date.now()
 			const add = 500
 			console.log(count, count + add)
