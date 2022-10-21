@@ -20,8 +20,9 @@ app.get("/", (req, res) => {
 	res.status(200).json("online");
 });
 
-let count = 0
+
 app.get("/movie", async (req, res) => {
+	let count = 0
 	const { range, baseUrl } = req.query;
 	console.log(range, baseUrl);
 	// list movie
@@ -50,13 +51,14 @@ app.get("/movie", async (req, res) => {
 	}
 	if (port === 3333) {
 		start()
-		const interval = setInterval(start, 5 * 60 * 1000)
+		const interval = setInterval(start, 12 * 60 * 1000)
 		const result = []
 		async function start() {
 			const time = Date.now()
-			const add = 200
+			const add = 500
 			console.log(count, count + add)
-			const movieListTitle = await redeCanais_list_movie(baseUrl, data.slice(count, count + add));
+			const slice = data.slice(count, count + add)
+			const movieListTitle = await redeCanais_list_movie(baseUrl, slice);
 			count += add
 			const movieListImdbId = await imdb_title_movie(movieListTitle);
 			const movieListInfoComplete = await imdb_id_movie(movieListImdbId)
@@ -74,8 +76,18 @@ app.get("/tv", async (req, res) => {
 	const { range, baseUrl } = req.query;
 	// list tv
 	const params = { range, baseUrl }
-	const tvValidate = await data_tv(params)
-	res.status(200).json(tvValidate);
+	if (port === 3333) {
+		await data_tv(params)
+	}
+	try {
+		const resp = await fsSync.readFile(`./temp/imdb_tv.json`)
+		const respJson = await JSON.parse(resp)
+		const tvListCategoria = await Category(respJson)
+		res.status(200).json(tvListCategoria);
+	} catch (error) {
+		res.status(200).json([]);
+	}
+
 });
 app.listen(port, () => {
 	console.log(`Example app listening on port: ${port}`);

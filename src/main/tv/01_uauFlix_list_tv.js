@@ -26,10 +26,10 @@ const list_tv = async function () {
 	resultFilter = arrayIdSort
 		.filter((x) => x.date >= 1900)
 		.filter((x) => x !== false);
-	resultFilter.map((x) => resultIds.push(
+	resultFilter.map((item) => resultIds.push(
 		{
-			imdb_id: x.id,
-			uuid: hash({ imdb_id: x.id }, { algorithm: 'sha1' })
+			imdb_id: item.id,
+			uuid: hash({imdb_id: item.id}, { algorithm: 'sha1' })
 		}
 	));
 	return resultIds
