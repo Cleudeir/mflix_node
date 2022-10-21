@@ -15,7 +15,6 @@ async function Category(data) {
   for (let i = 0; i < genres.length; i += 1) {
     const genre = filterVote.filter((x) => x.genres === genres[i]);
     if (genre.length > 0) {
-      console.log(genre.slice(0, 300).length)
       result.push(genre.slice(0, 300));
     }
   }
