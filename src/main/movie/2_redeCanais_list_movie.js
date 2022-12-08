@@ -6,19 +6,22 @@ const redeCanais = async function (baseUrl, data) {
   const save = new Save("redeCanais_list_movie")
   console.log('mapFilmes: ', data.length)
   const remenber = await save.verify(data)
+  console.log(remenber)
   const resList = await asyncCrawlerList(baseUrl, remenber)
+
 
   for (let i = 0; i < resList.length; i++) {
     console.log('redeCanais_list ', (i + 1), '/', resList.length)
     const res = resList[i]
     let url = null;
-    const { title, year, uuid } = data[i]
+    const { title, year, uuid, redeCanaisNamed } = data[i]
     if (!res) {
       await save.insert({
         uuid,
         title,
         url,
         year,
+        redeCanaisNamed,
         error: true
       })
       continue;
@@ -35,9 +38,9 @@ const redeCanais = async function (baseUrl, data) {
 
     } else { url = null };
     if (url) {
-      await save.insert({ uuid, title, url, year, error: false })
+      await save.insert({ uuid, title, url, year, redeCanaisNamed, error: false })
     } else {
-      await save.insert({ uuid, title, url, year, error: true })
+      await save.insert({ uuid, title, url, year, redeCanaisNamed, error: true })
     }
   }
   const result = await save.read()

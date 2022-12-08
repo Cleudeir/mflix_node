@@ -10,13 +10,20 @@ const get = async function (item) {
 	};
 	try {
 		const title = item.title.toLowerCase().split(" ").join("+")
-		const year = item.year
+		const { uuid, redeCanaisNamed, year } = item
 		const pullInfo = await fetch(
 			url = `https://api.themoviedb.org/3/search/movie?include_adult=false&page=1&language=pt-BR&api_key=${api.key}&query=${title}&year=${year}`
 		);
 		const jsonInfo = await pullInfo.json();
 		if (jsonInfo.results && jsonInfo.results[0] && jsonInfo.results[0].id) {
-			return { uuid: item.uuid, imdb_id: jsonInfo.results[0].id, url: item.url, year, error: false }
+			return {
+				uuid,
+				imdb_id: jsonInfo.results[0].id,
+				url: item.url,
+				redeCanaisNamed,
+				year,
+				error: false
+			}
 		} else {
 			return { ...item, error: true };
 		}

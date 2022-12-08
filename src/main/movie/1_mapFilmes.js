@@ -15,7 +15,7 @@ const mapFilmes = async function (baseUrl) {
             const [one, two] = url.split("-dublado-");
             const [year] = two.split("-");
             const title = one.replace("/", "").split("-").join(" ");
-            data.push({ uuid: hash({ title, url, year }, { algorithm: 'sha1' }), title, url, year });
+            data.push({ uuid: hash({ title, url, year }, { algorithm: 'sha1' }), title, url, year, redeCanaisNamed: title });
         }
     }
     console.log('mapFilmes: ', data.length)

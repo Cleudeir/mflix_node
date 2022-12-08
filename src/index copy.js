@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
 
 let ocupadoMovie = false
 app.get("/movie", async (req, res) => {
-	const time = Date.now()
+	let count = 0
 	const { range, baseUrl } = req.query;
 	console.log(range, baseUrl);
 	// list movie
@@ -31,15 +31,47 @@ app.get("/movie", async (req, res) => {
 		res.status(200).json("Falta parameros");
 		return null;
 	}
-	const data = await mapFilmes(baseUrl)
-	const slice = data.slice(0, 15)
-	const movieListTitle = await redeCanais_list_movie(baseUrl, slice);
-	const movieListImdbId = await imdb_title_movie(movieListTitle);
-	const movieListInfoComplete = await imdb_id_movie(movieListImdbId)
-	const movieListCategoria = await Category(movieListInfoComplete)
-	res.status(200).json(movieListCategoria);
-	console.log('>>>>>', (Date.now() - time) / 1000, 's <<<<<')
 
+	// listar uauflix
+	// const uau_list = await uau_list_movie(range);
+	// const data_uauFlix = await imdb_id_movie(uau_list)	
+
+	try {
+		const resp = await fsSync.readFile(`./temp/imdb_movie.json`)
+		const respJson = await JSON.parse(resp)
+		count = respJson.length
+		console.log("count ", count)
+		const movieListCategoria = await Category(respJson)
+		res.status(200).json(movieListCategoria);
+
+	} catch (error) {
+		res.status(200).json([]);
+	}
+	if (port === 3333 && ocupadoMovie === false) {
+		console.log("Start")
+		const interval = setInterval(start, 12 * 60 * 1000)
+		const result = []
+		start()
+		async function start() {
+			ocupadoMovie = true
+			const data = await mapFilmes(baseUrl)
+			const time = Date.now()
+			const add = 500
+			console.log(count, count + add)
+			const slice = data.slice(count, count + add)
+			const movieListTitle = await redeCanais_list_movie(baseUrl, slice);
+			count += add
+			const movieListImdbId = await imdb_title_movie(movieListTitle);
+			const movieListInfoComplete = await imdb_id_movie(movieListImdbId)
+			result.push(...movieListInfoComplete)
+			console.log('>>>>>', (Date.now() - time) / 1000, 's <<<<<')
+			if (count > data.length) {
+				clearInterval(interval)
+				console.log(`Atualizada lista ${result.length} ${type}`);
+				ocupadoMovie = false
+			}
+		}
+	}
 });
 
 let ocupadoTv = false

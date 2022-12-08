@@ -52,15 +52,17 @@ class Save {
 		}
 	}
 	async insert(data) {
+		console.log(data.title)
 		if (!data) return
 		try {
 			const read = await fsSync.readFile(`./temp/${this.name}.json`)
 			const json = JSON.parse(read)
 			const filter = json.filter(item => item.uuid === data.uuid)
+			console.log(filter)
 			if (filter.length === 0) {
 				console.log('insert :', json.length)
 				fs.writeFileSync(`./temp/${this.name}.json`, JSON.stringify([...json, data]));
-			}else{
+			} else {
 				console.log('Not insert, repeated!')
 			}
 		} catch (error) {

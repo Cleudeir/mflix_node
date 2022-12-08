@@ -45,6 +45,7 @@ const get = async function (item) {
 
 			return {
 				uuid: item.uuid,
+				redeCanaisNamed: item.redeCanaisNamed,
 				backdrop_path,
 				genres,
 				imdb_id,
