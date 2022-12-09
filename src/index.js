@@ -22,8 +22,14 @@ app.get("/", (req, res) => {
 
 app.get("/movie", async (req, res) => {
 	const resp = await fsSync.readFile(`./temp/imdb_movie.json`)
-	const respJson = await JSON.parse(resp)
-	let count = respJson.length | 0
+	const imdb_movie = await JSON.parse(resp)
+	const resp2 = await fsSync.readFile(`./temp/imdb_title_movie.json`)
+	const imdb_title_movie = await JSON.parse(resp2)
+	const resp3 = await fsSync.readFile(`./temp/redeCanais_list_movie.json`)
+	const redeCanais_list_movie = await JSON.parse(resp3)
+
+	console.log(">>>>>", 'imdb_movie :', imdb_movie.length, 'imdb_title_movie :', imdb_title_movie.length, 'redeCanais_list_movie :', redeCanais_list_movie.length, "<<<<<");
+	let count = imdb_movie.length | 0
 	const time = Date.now()
 	const { baseUrl } = req.query;
 
@@ -34,14 +40,16 @@ app.get("/movie", async (req, res) => {
 	console.log({ count, baseUrl });
 
 	//resultado imediato
-	const sliceData1 = data.slice(0, 100)
+	const sliceData1 = data.slice(0, count)
 	console.log('sliceData1', sliceData1.length)
 	const response = await getInfosMovies(baseUrl, sliceData1)
 	res.status(200).json(response);
 	console.log('>>>>>', (Date.now() - time) / 1000, 's <<<<<')
+
 	//Aumentar biblioteca
-	const sliceData2 = data.slice(0, 100)
+	const sliceData2 = data.slice(0, count + 150)
 	getInfosMovies(baseUrl, sliceData2)
+
 });
 
 async function getInfosMovies(baseUrl, data) {
@@ -49,7 +57,7 @@ async function getInfosMovies(baseUrl, data) {
 	const movieListImdbId = await imdb_title_movie(movieListTitle);
 	const movieListInfoComplete = await imdb_id_movie(movieListImdbId)
 
-	console.log(">>>>>",{movieListTitle, movieListImdbId, movieListInfoComplete},"<<<<<")
+	console.log(">>>>>", movieListTitle.length, movieListImdbId.length, movieListInfoComplete.length, "<<<<<")
 	const movieListCategoria = await Category(movieListInfoComplete)
 	return movieListCategoria
 }

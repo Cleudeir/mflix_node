@@ -58,7 +58,6 @@ class Save {
 			const json = JSON.parse(read)
 			const filter = json.filter(item => item.uuid === data.uuid)
 			if (filter.length === 0) {
-				console.log('insert :', json.length)
 				fs.writeFileSync(`./temp/${this.name}.json`, JSON.stringify([...json, data]));
 			} else {
 				console.log('Not insert, repeated!')

@@ -69,7 +69,9 @@ const imdb_movie = async (list) => {
 	const save = new Save("imdb_movie")
 	const remenber = await save.verify(list)
 	for (let i = 0; i < remenber.length; i += 1) {
-		console.log('id_imdb_movie', i, '/', remenber.length)
+		if (Number.isInteger(i / 10)) {
+			console.log('id_imdb_movie', i, '/', remenber.length)
+		}
 		const item = remenber[i];
 		if (item.error === true) {
 			await save.insert(item)

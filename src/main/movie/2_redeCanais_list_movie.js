@@ -8,7 +8,10 @@ const redeCanais = async function (baseUrl, data) {
   const resList = await asyncCrawlerList(baseUrl, remenber)
 
   for (let i = 0; i < resList.length; i++) {
-    console.log('redeCanais_list ', (i + 1), '/', resList.length)
+    if (Number.isInteger(i / 10)) {
+      console.log('redeCanais_list ', (i + 1), '/', resList.length)
+    }
+
     const res = resList[i]
     let url = null;
     const { title, year, uuid, redeCanaisNamed } = remenber[i]
