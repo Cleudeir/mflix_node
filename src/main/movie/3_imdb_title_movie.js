@@ -33,7 +33,6 @@ const get = async function (item) {
 };
 
 const imdb_title_movie = async (list) => {
-
 	const save = new Save("imdb_title_movie")
 	const remenber = await save.verify(list)
 	for (let i = 0; i < remenber.length; i += 1) {

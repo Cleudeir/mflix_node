@@ -20,27 +20,36 @@ app.get("/", (req, res) => {
 	res.status(200).json("online");
 });
 
-let ocupadoMovie = false
 app.get("/movie", async (req, res) => {
+	const resp = await fsSync.readFile(`./temp/imdb_movie.json`)
+	const respJson = await JSON.parse(resp)
+	let count = respJson.length | 0
 	const time = Date.now()
-	const { range, baseUrl } = req.query;
-	console.log(range, baseUrl);
+	const { baseUrl } = req.query;
+
 	// list movie
 	const type = "movie";
-	if (!type || !range) {
-		res.status(200).json("Falta parameros");
-		return null;
-	}
 	const data = await mapFilmes(baseUrl)
-	const slice = data.slice(0, 15)
-	const movieListTitle = await redeCanais_list_movie(baseUrl, slice);
+
+	console.log({ count, baseUrl });
+
+	//resultado imediato
+	const sliceData1 = data.slice(0, count)
+	const response = await getInfos(baseUrl, sliceData1)
+	res.status(200).json(response);
+	console.log('>>>>>', (Date.now() - time) / 1000, 's <<<<<')
+	//Aumentar biblioteca
+	const sliceData2 = data.slice(0, count + 200)
+	getInfos(baseUrl, sliceData2)
+});
+
+async function getInfos(baseUrl, data) {
+	const movieListTitle = await redeCanais_list_movie(baseUrl, data);
 	const movieListImdbId = await imdb_title_movie(movieListTitle);
 	const movieListInfoComplete = await imdb_id_movie(movieListImdbId)
 	const movieListCategoria = await Category(movieListInfoComplete)
-	res.status(200).json(movieListCategoria);
-	console.log('>>>>>', (Date.now() - time) / 1000, 's <<<<<')
-
-});
+	return movieListCategoria
+}
 
 let ocupadoTv = false
 app.get("/tv", async (req, res) => {

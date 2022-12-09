@@ -4,17 +4,14 @@ const Save = require("../../components/Save");
 
 const redeCanais = async function (baseUrl, data) {
   const save = new Save("redeCanais_list_movie")
-  console.log('mapFilmes: ', data.length)
   const remenber = await save.verify(data)
-  console.log(remenber)
   const resList = await asyncCrawlerList(baseUrl, remenber)
-
 
   for (let i = 0; i < resList.length; i++) {
     console.log('redeCanais_list ', (i + 1), '/', resList.length)
     const res = resList[i]
     let url = null;
-    const { title, year, uuid, redeCanaisNamed } = data[i]
+    const { title, year, uuid, redeCanaisNamed } = remenber[i]
     if (!res) {
       await save.insert({
         uuid,
