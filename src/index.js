@@ -35,15 +35,15 @@ app.get("/movie", async (req, res) => {
 
 	//resultado imediato
 	const sliceData1 = data.slice(0, count)
-	const response = await getInfos(baseUrl, sliceData1)
+	const response = await getInfosMovies(baseUrl, sliceData1)
 	res.status(200).json(response);
 	console.log('>>>>>', (Date.now() - time) / 1000, 's <<<<<')
 	//Aumentar biblioteca
 	const sliceData2 = data.slice(0, count + 200)
-	getInfos(baseUrl, sliceData2)
+	getInfosMovies(baseUrl, sliceData2)
 });
 
-async function getInfos(baseUrl, data) {
+async function getInfosMovies(baseUrl, data) {
 	const movieListTitle = await redeCanais_list_movie(baseUrl, data);
 	const movieListImdbId = await imdb_title_movie(movieListTitle);
 	const movieListInfoComplete = await imdb_id_movie(movieListImdbId)
@@ -51,25 +51,17 @@ async function getInfos(baseUrl, data) {
 	return movieListCategoria
 }
 
-let ocupadoTv = false
 app.get("/tv", async (req, res) => {
-	const { range, baseUrl } = req.query;
+	const { baseUrl } = req.query;
 	// list tv
-	const params = { range, baseUrl }
-	try {
-		const resp = await fsSync.readFile(`./temp/imdb_tv.json`)
-		const respJson = await JSON.parse(resp)
-		const tvListCategoria = await Category(respJson)
-		res.status(200).json(tvListCategoria);
-	} catch (error) {
-		res.status(200).json([]);
-	}
+	const params = { baseUrl }
+	const resp = await fsSync.readFile(`./temp/imdb_tv.json`)
+	const respJson = await JSON.parse(resp)
+	const tvListCategoria = await Category(respJson)
+	res.status(200).json(tvListCategoria);
 
-	if (port === 3333 && ocupadoTv === false) {
-		ocupadoTv = true
-		await data_tv(params)
-		ocupadoTv = false
-	}
+	let count = respJson.length | 0
+	const result = await data_tv(params)
 });
 app.listen(port, () => {
 	console.log(`Example app listening on port: ${port}`);
