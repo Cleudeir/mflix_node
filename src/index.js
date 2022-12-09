@@ -29,8 +29,8 @@ app.get("/movie", async (req, res) => {
 	const redeCanais_list_movie = await JSON.parse(resp3)
 
 	console.log(">>>>>", 'imdb_movie :', imdb_movie.length, 'imdb_title_movie :', imdb_title_movie.length, 'redeCanais_list_movie :', redeCanais_list_movie.length, "<<<<<");
-	let count = imdb_movie.length | 0
-	const time = Date.now()
+	let count = imdb_movie.length | 0;
+	const time = Date.now();
 	const { baseUrl } = req.query;
 
 	// list movie
@@ -49,7 +49,6 @@ app.get("/movie", async (req, res) => {
 	//Aumentar biblioteca
 	const sliceData2 = data.slice(0, count + 150)
 	getInfosMovies(baseUrl, sliceData2)
-
 });
 
 async function getInfosMovies(baseUrl, data) {
@@ -76,7 +75,4 @@ app.get("/tv", async (req, res) => {
 });
 app.listen(port, () => {
 	console.log(`Example app listening on port: ${port}`);
-}); // list movie
-
-
-
+});
