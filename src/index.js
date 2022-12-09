@@ -34,12 +34,13 @@ app.get("/movie", async (req, res) => {
 	console.log({ count, baseUrl });
 
 	//resultado imediato
-	const sliceData1 = data.slice(0, count)
+	const sliceData1 = data.slice(0, 100)
+	console.log('sliceData1', sliceData1.length)
 	const response = await getInfosMovies(baseUrl, sliceData1)
 	res.status(200).json(response);
 	console.log('>>>>>', (Date.now() - time) / 1000, 's <<<<<')
 	//Aumentar biblioteca
-	const sliceData2 = data.slice(0, count + 200)
+	const sliceData2 = data.slice(0, 100)
 	getInfosMovies(baseUrl, sliceData2)
 });
 
@@ -47,6 +48,8 @@ async function getInfosMovies(baseUrl, data) {
 	const movieListTitle = await redeCanais_list_movie(baseUrl, data);
 	const movieListImdbId = await imdb_title_movie(movieListTitle);
 	const movieListInfoComplete = await imdb_id_movie(movieListImdbId)
+
+	console.log(">>>>>",{movieListTitle, movieListImdbId, movieListInfoComplete},"<<<<<")
 	const movieListCategoria = await Category(movieListInfoComplete)
 	return movieListCategoria
 }
