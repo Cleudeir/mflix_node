@@ -10,8 +10,7 @@ class Save {
 		let read;
 		try {
 			read = JSON.parse(await fsSync.readFile(`./temp/${this.name}.json`))
-			const dataUnique =
-				console.log(this.name, read.length)
+			console.log(this.name)
 		} catch (error) {
 			await fsSync.writeFile(`./temp/${this.name}.json`, JSON.stringify([]))
 			console.log(this.name)
@@ -63,7 +62,7 @@ class Save {
 				console.log('Not insert, repeated!')
 			}
 		} catch (error) {
-			fs.writeFileSync(`./temp/${this.name}.json`, JSON.stringify([data]));
+			console.log('Not insert', error)
 		}
 	}
 }
