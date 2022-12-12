@@ -11,11 +11,11 @@ async function Category(data) {
   //--
   // Criar Array categorizado por gênero
   const result = [];
-  const filterVote = data.filter((x) => +x.vote_average > 0 && x.error === false);
+  const filterVote = data.filter((x) => +x.vote_average > 7 && x.error === false);
   for (let i = 0; i < genres.length; i += 1) {
     const genre = filterVote.filter((x) => x.genres === genres[i]);
     if (genre.length > 0) {
-      result.push(genre.slice(0, 300));
+      result.push(genre.slice(0, 100));
     }
   }
   return result;
