@@ -3,6 +3,9 @@ const asyncCrawlerSingle = require("../../components/asyncCrawlerSingle");
 var hash = require('object-hash');
 const mapFilmes = async function (baseUrl) {
     const res = await asyncCrawlerSingle(`${baseUrl}/mapafilmes.html`)
+    if(!res){
+        mapFilmes(baseUrl)
+    }
     const { $ } = res;
     const response = $('a:contains("Assistir")');
     const data = [];

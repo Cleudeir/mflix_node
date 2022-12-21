@@ -4,65 +4,46 @@ const path = require('path');
 class Save {
 	constructor(name) {
 		this.name = name
-		this.create()
+		this.data = []
 	}
-	async create() {
-		let read;
-		try {
-			read = JSON.parse(await fsSync.readFile(`./temp/${this.name}.json`))
-			console.log(this.name)
-		} catch (error) {
-			await fsSync.writeFile(`./temp/${this.name}.json`, JSON.stringify([]))
-			console.log(this.name)
-		}
-	}
+
 	async read() {
-		let read;
-		try {
-			read = JSON.parse(
-				await fsSync.readFile(`./temp/${this.name}.json`)
-			)
-			return read
-		} catch (error) {
-			console.log(error)
-			return []
-		}
+		console.log(this.name, 'data', this.data.length)
+			return this.data
 	}
 	async verify(list) {
-		let read;
 		if (typeof list !== "object") {
 			return console.warn(">>>>>>", list)
 		}
-		try {
-			read = JSON.parse(
-				await fsSync.readFile(`./temp/${this.name}.json`)
-			).map(x => x["uuid"])
-			if (read.length > 0) {
-				let difference = list.filter(x => !read.includes(x["uuid"]));
-				console.log(
-					'>>>>> name:', this.name, '- difference:', difference.length, '<<<<<<',
-				)
-				return difference
-			}
-			return list
-		} catch (error) {
-			console.log(list.length, "Não há nenhum existente!")
-			return list
+		this.data = JSON.parse(await fsSync.readFile(`./temp/${this.name}.json`)) || []
+		console.log(this.name, 'data', this.data.length)
+
+		const read = this.data.map(x => x["uuid"])
+		console.log(
+			'>>>>> verify start:',this.name, this.data.length, read.lenght, '<<<<<<',
+		)
+		if (read.length > 0) {
+			let difference = list.filter(x => !read.includes(x["uuid"]));
+			console.log(
+				'>>>>> name:', this.name, '- difference:', difference.length, '<<<<<<',
+			)
+		return difference
 		}
+		return list
 	}
-	async insert(data) {
-		if (!data) return
+	async insert(item) {
+		if (!item) return
 		try {
-			const read = await fsSync.readFile(`./temp/${this.name}.json`)
-			const json = JSON.parse(read)
-			const filter = json.filter(item => item.uuid === data.uuid)
+			const filter = this.data.filter(x => x.uuid === item.uuid)
 			if (filter.length === 0) {
-				fs.writeFileSync(`./temp/${this.name}.json`, JSON.stringify([...json, data]));
-			} else {
-				console.log('Not insert, repeated!')
+				this.data = [...this.data, item]
+				console.log(
+					'>>>>> verify:',this.name, this.data.length, '<<<<<<',
+				)
+				fs.writeFileSync(`./temp/${this.name}.json`, JSON.stringify(this.data));
 			}
 		} catch (error) {
-			console.log('Not insert', error)
+			console.log('Not insert')
 		}
 	}
 }

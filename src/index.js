@@ -16,10 +16,14 @@ app.use(express.json());
 
 const port = process.env.PORT || 3333;
 
+function sleep(s) {
+	return new Promise(resolve => setTimeout(resolve, s*1000));
+ }
+
 app.get("/", (req, res) => {
 	res.status(200).json("online");
 });
-
+let inUse = false
 app.get("/movie", async (req, res) => {
 	const resp = await fsSync.readFile(`./temp/imdb_movie.json`)
 	const imdb_movie = await JSON.parse(resp)
@@ -45,10 +49,14 @@ app.get("/movie", async (req, res) => {
 	const response = await getInfosMovies(baseUrl, sliceData1)
 	res.status(200).json(response);
 	console.log('>>>>>', (Date.now() - time) / 1000, 's <<<<<')
+	//Aumentar biblioteca 
+	if(inUse === false){
+		inUse = true
+		const sliceData2 = data.slice(0, count + 50)
+		await getInfosMovies(baseUrl, sliceData2)	
+		inUse = false
+	}
 
-	//Aumentar biblioteca
-	const sliceData2 = data.slice(0, count + 150)
-	getInfosMovies(baseUrl, sliceData2)
 });
 
 async function getInfosMovies(baseUrl, data) {
@@ -56,7 +64,7 @@ async function getInfosMovies(baseUrl, data) {
 	const movieListImdbId = await imdb_title_movie(movieListTitle);
 	const movieListInfoComplete = await imdb_id_movie(movieListImdbId)
 
-	console.log(">>>>>", movieListTitle.length, movieListImdbId.length, movieListInfoComplete.length, "<<<<<")
+	console.log(">>>>>",'movieListTitle', movieListTitle.length,'movieListImdbId', movieListImdbId.length,'movieListInfoComplete', movieListInfoComplete.length, "<<<<<")
 	const movieListCategoria = await Category(movieListInfoComplete)
 	return movieListCategoria
 }
