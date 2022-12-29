@@ -27,12 +27,6 @@ let inUse = false
 app.get("/movie", async (req, res) => {
 	const resp = await fsSync.readFile(`./temp/imdb_movie.json`)
 	const imdb_movie = await JSON.parse(resp)
-	const resp2 = await fsSync.readFile(`./temp/imdb_title_movie.json`)
-	const imdb_title_movie = await JSON.parse(resp2)
-	const resp3 = await fsSync.readFile(`./temp/redeCanais_list_movie.json`)
-	const redeCanais_list_movie = await JSON.parse(resp3)
-
-	console.log(">>>>>", 'imdb_movie :', imdb_movie.length, 'imdb_title_movie :', imdb_title_movie.length, 'redeCanais_list_movie :', redeCanais_list_movie.length, "<<<<<");
 	let count = imdb_movie.length | 0;
 	const time = Date.now();
 	const { baseUrl } = req.query;
@@ -49,21 +43,23 @@ app.get("/movie", async (req, res) => {
 	const response = await getInfosMovies(baseUrl, sliceData1)
 	res.status(200).json(response);
 	console.log('>>>>>', (Date.now() - time) / 1000, 's <<<<<')
-	//Aumentar biblioteca 
-	if(inUse === false){
-		inUse = true
-		const sliceData2 = data.slice(0, count + 50)
-		await getInfosMovies(baseUrl, sliceData2)	
-		inUse = false
-	}
-
 });
 
-async function getInfosMovies(baseUrl, data) {
-	const movieListTitle = await redeCanais_list_movie(baseUrl, data);
-	const movieListImdbId = await imdb_title_movie(movieListTitle);
-	const movieListInfoComplete = await imdb_id_movie(movieListImdbId)
+//Aumentar biblioteca
+feed() 
+async function feed(){
+	const resp = await fsSync.readFile(`./temp/imdb_movie.json`)
+	const imdb_movie = await JSON.parse(resp)
+	const count = imdb_movie.length
+	const data = data.slice(0, count + 100)
+	await getInfosMovies(baseUrl, data)	
+	feed()
+}	
 
+async function getInfosMovies(baseUrl, data) {
+	const movieListTitle = await redeCanais_list_movie(baseUrl, data)
+	const movieListImdbId = await imdb_title_movie(movieListTitle)
+	const movieListInfoComplete = await imdb_id_movie(movieListImdbId)
 	console.log(">>>>>",'movieListTitle', movieListTitle.length,'movieListImdbId', movieListImdbId.length,'movieListInfoComplete', movieListInfoComplete.length, "<<<<<")
 	const movieListCategoria = await Category(movieListInfoComplete)
 	return movieListCategoria
@@ -77,7 +73,6 @@ app.get("/tv", async (req, res) => {
 	const respJson = await JSON.parse(resp)
 	const tvListCategoria = await Category(respJson)
 	res.status(200).json(tvListCategoria);
-
 	let count = respJson.length | 0
 	const result = await data_tv(params)
 });
