@@ -1,8 +1,8 @@
 
-                # imdb_movie.json                
-                ## project structure
-                ```                    
-                mflix_node/
+# mflix_node               
+## project structure
+```                    
+mflix_node/
     package-lock.json
     README.md
     Procfile
@@ -39,8 +39,8 @@
         imdb_tv.json
         redeCanais_list_movie.json
         imdb_movie.json                
-                ```
-                ## Propósito e Descrição do Projeto
+```
+## Propósito e Descrição do Projeto
 
 Este projeto visa criar e manter um catálogo de filmes e séries de TV, coletando e organizando metadados de diversas fontes, incluindo APIs como TMDb e IMDb, e sites de streaming como Uau Flix. O objetivo é fornecer um conjunto de dados consistente e completo para uso em aplicações relacionadas a entretenimento, como plataformas de streaming, sites de crítica de filmes, ou sistemas de recomendação.
 
